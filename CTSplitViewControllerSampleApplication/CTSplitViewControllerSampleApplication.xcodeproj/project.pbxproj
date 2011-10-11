@@ -1,0 +1,266 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A72C8B80144431A100F845A2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A72C8B7F144431A100F845A2 /* UIKit.framework */; };
+		A72C8B82144431A100F845A2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A72C8B81144431A100F845A2 /* Foundation.framework */; };
+		A72C8B84144431A100F845A2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A72C8B83144431A100F845A2 /* CoreGraphics.framework */; };
+		A72C8B8A144431A100F845A2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A72C8B88144431A100F845A2 /* InfoPlist.strings */; };
+		A72C8B8C144431A100F845A2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A72C8B8B144431A100F845A2 /* main.m */; };
+		A72C8B90144431A100F845A2 /* CTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A72C8B8F144431A100F845A2 /* CTAppDelegate.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A72C8B7B144431A100F845A2 /* CTSplitViewControllerSampleApplication.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CTSplitViewControllerSampleApplication.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A72C8B7F144431A100F845A2 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		A72C8B81144431A100F845A2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		A72C8B83144431A100F845A2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		A72C8B87144431A100F845A2 /* CTSplitViewControllerSampleApplication-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CTSplitViewControllerSampleApplication-Info.plist"; sourceTree = "<group>"; };
+		A72C8B89144431A100F845A2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		A72C8B8B144431A100F845A2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		A72C8B8D144431A100F845A2 /* CTSplitViewControllerSampleApplication-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CTSplitViewControllerSampleApplication-Prefix.pch"; sourceTree = "<group>"; };
+		A72C8B8E144431A100F845A2 /* CTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CTAppDelegate.h; sourceTree = "<group>"; };
+		A72C8B8F144431A100F845A2 /* CTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CTAppDelegate.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A72C8B78144431A100F845A2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A72C8B80144431A100F845A2 /* UIKit.framework in Frameworks */,
+				A72C8B82144431A100F845A2 /* Foundation.framework in Frameworks */,
+				A72C8B84144431A100F845A2 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A72C8B70144431A100F845A2 = {
+			isa = PBXGroup;
+			children = (
+				A72C8B85144431A100F845A2 /* CTSplitViewControllerSampleApplication */,
+				A72C8B7E144431A100F845A2 /* Frameworks */,
+				A72C8B7C144431A100F845A2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A72C8B7C144431A100F845A2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A72C8B7B144431A100F845A2 /* CTSplitViewControllerSampleApplication.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A72C8B7E144431A100F845A2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A72C8B7F144431A100F845A2 /* UIKit.framework */,
+				A72C8B81144431A100F845A2 /* Foundation.framework */,
+				A72C8B83144431A100F845A2 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A72C8B85144431A100F845A2 /* CTSplitViewControllerSampleApplication */ = {
+			isa = PBXGroup;
+			children = (
+				A72C8B8E144431A100F845A2 /* CTAppDelegate.h */,
+				A72C8B8F144431A100F845A2 /* CTAppDelegate.m */,
+				A72C8B86144431A100F845A2 /* Supporting Files */,
+			);
+			path = CTSplitViewControllerSampleApplication;
+			sourceTree = "<group>";
+		};
+		A72C8B86144431A100F845A2 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A72C8B87144431A100F845A2 /* CTSplitViewControllerSampleApplication-Info.plist */,
+				A72C8B88144431A100F845A2 /* InfoPlist.strings */,
+				A72C8B8B144431A100F845A2 /* main.m */,
+				A72C8B8D144431A100F845A2 /* CTSplitViewControllerSampleApplication-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A72C8B7A144431A100F845A2 /* CTSplitViewControllerSampleApplication */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A72C8B93144431A100F845A2 /* Build configuration list for PBXNativeTarget "CTSplitViewControllerSampleApplication" */;
+			buildPhases = (
+				A72C8B77144431A100F845A2 /* Sources */,
+				A72C8B78144431A100F845A2 /* Frameworks */,
+				A72C8B79144431A100F845A2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CTSplitViewControllerSampleApplication;
+			productName = CTSplitViewControllerSampleApplication;
+			productReference = A72C8B7B144431A100F845A2 /* CTSplitViewControllerSampleApplication.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A72C8B72144431A100F845A2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = Home;
+			};
+			buildConfigurationList = A72C8B75144431A100F845A2 /* Build configuration list for PBXProject "CTSplitViewControllerSampleApplication" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = A72C8B70144431A100F845A2;
+			productRefGroup = A72C8B7C144431A100F845A2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A72C8B7A144431A100F845A2 /* CTSplitViewControllerSampleApplication */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A72C8B79144431A100F845A2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A72C8B8A144431A100F845A2 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A72C8B77144431A100F845A2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A72C8B8C144431A100F845A2 /* main.m in Sources */,
+				A72C8B90144431A100F845A2 /* CTAppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		A72C8B88144431A100F845A2 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A72C8B89144431A100F845A2 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A72C8B91144431A100F845A2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A72C8B92144431A100F845A2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A72C8B94144431A100F845A2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CTSplitViewControllerSampleApplication/CTSplitViewControllerSampleApplication-Prefix.pch";
+				INFOPLIST_FILE = "CTSplitViewControllerSampleApplication/CTSplitViewControllerSampleApplication-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		A72C8B95144431A100F845A2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CTSplitViewControllerSampleApplication/CTSplitViewControllerSampleApplication-Prefix.pch";
+				INFOPLIST_FILE = "CTSplitViewControllerSampleApplication/CTSplitViewControllerSampleApplication-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A72C8B75144431A100F845A2 /* Build configuration list for PBXProject "CTSplitViewControllerSampleApplication" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A72C8B91144431A100F845A2 /* Debug */,
+				A72C8B92144431A100F845A2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A72C8B93144431A100F845A2 /* Build configuration list for PBXNativeTarget "CTSplitViewControllerSampleApplication" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A72C8B94144431A100F845A2 /* Debug */,
+				A72C8B95144431A100F845A2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A72C8B72144431A100F845A2 /* Project object */;
+}

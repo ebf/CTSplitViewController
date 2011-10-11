@@ -13,6 +13,7 @@
 		A72C8B8A144431A100F845A2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A72C8B88144431A100F845A2 /* InfoPlist.strings */; };
 		A72C8B8C144431A100F845A2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A72C8B8B144431A100F845A2 /* main.m */; };
 		A72C8B90144431A100F845A2 /* CTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A72C8B8F144431A100F845A2 /* CTAppDelegate.m */; };
+		A72C8B981444320000F845A2 /* CTSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A72C8B971444320000F845A2 /* CTSplitViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,8 @@
 		A72C8B8D144431A100F845A2 /* CTSplitViewControllerSampleApplication-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CTSplitViewControllerSampleApplication-Prefix.pch"; sourceTree = "<group>"; };
 		A72C8B8E144431A100F845A2 /* CTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CTAppDelegate.h; sourceTree = "<group>"; };
 		A72C8B8F144431A100F845A2 /* CTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CTAppDelegate.m; sourceTree = "<group>"; };
+		A72C8B961444320000F845A2 /* CTSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTSplitViewController.h; path = ../CTSplitViewController/CTSplitViewController.h; sourceTree = "<group>"; };
+		A72C8B971444320000F845A2 /* CTSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CTSplitViewController.m; path = ../CTSplitViewController/CTSplitViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +48,7 @@
 		A72C8B70144431A100F845A2 = {
 			isa = PBXGroup;
 			children = (
+				A72C8B991444320400F845A2 /* CTSplitViewController */,
 				A72C8B85144431A100F845A2 /* CTSplitViewControllerSampleApplication */,
 				A72C8B7E144431A100F845A2 /* Frameworks */,
 				A72C8B7C144431A100F845A2 /* Products */,
@@ -88,6 +92,15 @@
 				A72C8B8D144431A100F845A2 /* CTSplitViewControllerSampleApplication-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A72C8B991444320400F845A2 /* CTSplitViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A72C8B961444320000F845A2 /* CTSplitViewController.h */,
+				A72C8B971444320000F845A2 /* CTSplitViewController.m */,
+			);
+			name = CTSplitViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -154,6 +167,7 @@
 			files = (
 				A72C8B8C144431A100F845A2 /* main.m in Sources */,
 				A72C8B90144431A100F845A2 /* CTAppDelegate.m in Sources */,
+				A72C8B981444320000F845A2 /* CTSplitViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

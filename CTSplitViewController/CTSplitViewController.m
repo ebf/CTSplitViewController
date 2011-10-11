@@ -77,3 +77,20 @@
 }
 
 @end
+
+
+
+@implementation UIViewController (CTSplitViewController)
+
+- (CTSplitViewController *)CTSplitViewController
+{
+    UIViewController *parentViewController = self.parentViewController;
+    
+    while (![parentViewController isKindOfClass:[CTSplitViewController class]]) {
+        parentViewController = parentViewController.parentViewController;
+    }
+    
+    return (CTSplitViewController *)parentViewController;
+}
+
+@end

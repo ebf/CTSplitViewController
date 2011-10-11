@@ -24,3 +24,11 @@
 @property (nonatomic, unsafe_unretained) id<CTSplitViewControllerDelegate> delegate;
 
 @end
+
+
+
+@interface UIViewController (CTSplitViewController)
+
+@property (nonatomic, readonly) CTSplitViewController *CTSplitViewController;
+
+@end

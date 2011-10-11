@@ -26,6 +26,9 @@
 @property (nonatomic, unsafe_unretained) id<CTSplitViewControllerDelegate> delegate;
 @property (nonatomic, strong) NSArray *viewControllers;
 
+@property (nonatomic, readonly) UIViewController *masterViewController;
+@property (nonatomic, readonly) UIViewController *detailsViewController;
+
 @end
 
 

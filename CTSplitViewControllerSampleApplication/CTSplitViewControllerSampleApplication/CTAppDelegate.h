@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CTAppDelegate : UIResponder <UIApplicationDelegate>
+@interface CTAppDelegate : UIResponder <UIApplicationDelegate, UISplitViewControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

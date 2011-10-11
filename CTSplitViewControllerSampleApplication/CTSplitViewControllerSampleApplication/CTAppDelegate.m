@@ -20,10 +20,28 @@
     self.window.backgroundColor = [UIColor whiteColor];
     
     CTSplitViewController *splitViewController = [[CTSplitViewController alloc] init];
+    
+    UIViewController *m = [[UITableViewController alloc] init];
+    m.view.backgroundColor = [UIColor grayColor];
+    
+    UIViewController *d = [[UITableViewController alloc] init];
+    d.view.backgroundColor = [UIColor lightGrayColor];
+    
+    splitViewController.viewControllers = [NSArray arrayWithObjects:m, d, nil];
+    
     self.window.rootViewController = splitViewController;
     
     [self.window makeKeyAndVisible];
     return YES;
+}
+
+#pragma mark - UISplitViewControllerDelegate
+
+- (BOOL)splitViewController:(UISplitViewController *)svc 
+   shouldHideViewController:(UIViewController *)vc 
+              inOrientation:(UIInterfaceOrientation)orientation
+{
+    return NO;
 }
 
 @end

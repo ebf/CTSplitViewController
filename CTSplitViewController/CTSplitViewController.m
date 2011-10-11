@@ -10,9 +10,21 @@
 
 
 @implementation CTSplitViewController
-@synthesize delegate=_delegate;
+@synthesize delegate=_delegate, viewControllers=_viewControllers;
 
 #pragma mark - setters and getters
+
+- (void)setViewControllers:(NSArray *)viewControllers
+{
+    if (viewControllers != _viewControllers) {
+        NSAssert(viewControllers.count == 2, @"%@ can only accept exactly 2 viewControllers", self);
+        _viewControllers = viewControllers;
+        
+        if (self.isViewLoaded) {
+#warning reload view here
+        }
+    }
+}
 
 #pragma mark - Initialization
 

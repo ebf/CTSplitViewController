@@ -19,9 +19,12 @@
 @interface CTSplitViewController : UIViewController {
 @private
     id<CTSplitViewControllerDelegate> __unsafe_unretained _delegate;
+    
+    NSArray *_viewControllers;
 }
 
 @property (nonatomic, unsafe_unretained) id<CTSplitViewControllerDelegate> delegate;
+@property (nonatomic, strong) NSArray *viewControllers;
 
 @end
 

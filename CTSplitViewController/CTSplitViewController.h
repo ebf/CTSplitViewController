@@ -16,6 +16,10 @@
 
 
 
+/**
+ @class         CTSplitViewController
+ @abstract      parent view controller that mimics the behaviour of a UISplitViewController but with additional features.
+ */
 @interface CTSplitViewController : UIViewController {
 @private
     id<CTSplitViewControllerDelegate> __unsafe_unretained _delegate;
@@ -28,6 +32,12 @@
 
 @property (nonatomic, readonly) UIViewController *masterViewController;
 @property (nonatomic, readonly) UIViewController *detailsViewController;
+
+@property (nonatomic, assign, getter=isMasterViewControllerHidden) BOOL masterViewControllerHidden;
+- (void)setMasterViewControllerHidden:(BOOL)masterViewControllerHidden animated:(BOOL)animated;
+
+@property (nonatomic, assign) CGFloat masterViewControllerWidth;
+- (void)setMasterViewControllerWidth:(CGFloat)masterViewControllerWidth animated:(BOOL)animated;
 
 @end
 

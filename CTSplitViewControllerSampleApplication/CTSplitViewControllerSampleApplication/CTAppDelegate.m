@@ -8,6 +8,7 @@
 
 #import "CTAppDelegate.h"
 #import "CTSplitViewController.h"
+#import "DetailsViewController.h"
 
 @implementation CTAppDelegate
 
@@ -20,14 +21,17 @@
     self.window.backgroundColor = [UIColor whiteColor];
     
     CTSplitViewController *splitViewController = [[CTSplitViewController alloc] init];
+    splitViewController = [[CTSplitViewController alloc] init];
     
     UIViewController *m = [[UITableViewController alloc] init];
     m.view.backgroundColor = [UIColor grayColor];
     
-    UIViewController *d = [[UITableViewController alloc] init];
+    DetailsViewController *d = [[DetailsViewController alloc] init];
     d.view.backgroundColor = [UIColor lightGrayColor];
     
-    splitViewController.viewControllers = [NSArray arrayWithObjects:m, d, nil];
+    UINavigationController *n = [[UINavigationController alloc] initWithRootViewController:d];
+    
+    splitViewController.viewControllers = [NSArray arrayWithObjects:m, n, nil];
     
     self.window.rootViewController = splitViewController;
     

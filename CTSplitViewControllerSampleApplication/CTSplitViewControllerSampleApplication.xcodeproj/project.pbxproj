@@ -14,6 +14,7 @@
 		A72C8B8C144431A100F845A2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A72C8B8B144431A100F845A2 /* main.m */; };
 		A72C8B90144431A100F845A2 /* CTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A72C8B8F144431A100F845A2 /* CTAppDelegate.m */; };
 		A72C8B981444320000F845A2 /* CTSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A72C8B971444320000F845A2 /* CTSplitViewController.m */; };
+		A75B0F5D144498B000204A98 /* DetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A75B0F5C144498B000204A98 /* DetailsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,8 @@
 		A72C8B8F144431A100F845A2 /* CTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CTAppDelegate.m; sourceTree = "<group>"; };
 		A72C8B961444320000F845A2 /* CTSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CTSplitViewController.h; path = ../CTSplitViewController/CTSplitViewController.h; sourceTree = "<group>"; };
 		A72C8B971444320000F845A2 /* CTSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CTSplitViewController.m; path = ../CTSplitViewController/CTSplitViewController.m; sourceTree = "<group>"; };
+		A75B0F5B144498B000204A98 /* DetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailsViewController.h; sourceTree = "<group>"; };
+		A75B0F5C144498B000204A98 /* DetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +82,8 @@
 				A72C8B8E144431A100F845A2 /* CTAppDelegate.h */,
 				A72C8B8F144431A100F845A2 /* CTAppDelegate.m */,
 				A72C8B86144431A100F845A2 /* Supporting Files */,
+				A75B0F5B144498B000204A98 /* DetailsViewController.h */,
+				A75B0F5C144498B000204A98 /* DetailsViewController.m */,
 			);
 			path = CTSplitViewControllerSampleApplication;
 			sourceTree = "<group>";
@@ -168,6 +173,7 @@
 				A72C8B8C144431A100F845A2 /* main.m in Sources */,
 				A72C8B90144431A100F845A2 /* CTAppDelegate.m in Sources */,
 				A72C8B981444320000F845A2 /* CTSplitViewController.m in Sources */,
+				A75B0F5D144498B000204A98 /* DetailsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,6 +279,7 @@
 				A72C8B95144431A100F845A2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

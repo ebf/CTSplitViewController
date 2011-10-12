@@ -20,7 +20,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-    return 2;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -37,7 +37,7 @@
     }
     
     // Configure the cell...
-    cell.textLabel.text = indexPath.description;
+    cell.textLabel.text = @"Toggle setMasterViewControllerHidden:";
     
     return cell;
 }
@@ -46,19 +46,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
 {    
-    if (indexPath.section == 0) {
-        [self.CTSplitViewController setMasterViewControllerHidden:!self.CTSplitViewController.isMasterViewControllerHidden animated:YES];
-    } else {
-        CGFloat masterWidth = self.CTSplitViewController.masterViewControllerWidth;
-        
-        if (masterWidth == 200.0f) {
-            masterWidth = 300.0f;
-        } else {
-            masterWidth = 200.0f;
-        }
-        
-        [self.CTSplitViewController setMasterViewControllerWidth:masterWidth animated:YES];
-    }
+    [self.CTSplitViewController setMasterViewControllerHidden:!self.CTSplitViewController.isMasterViewControllerHidden animated:YES];
 }
 
 @end

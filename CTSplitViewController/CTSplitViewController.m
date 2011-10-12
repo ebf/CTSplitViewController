@@ -160,16 +160,22 @@
 - (void)loadView {
     [super loadView];
     
-#warning only load master view if not hidden
-    [self.masterViewController viewWillAppear:NO];
-    [self _loadMasterView];
-    [self.view addSubview:_masterView];
-    [self.masterViewController viewDidAppear:NO];
-    
+    // first load _detailsView because its always visible
     [self.detailsViewController viewWillAppear:NO];
     [self _loadDetailsView];
     [self.view addSubview:_detailsView];
     [self.detailsViewController viewDidAppear:NO];
+    
+    if (!self.isMasterViewControllerHidden) {
+        // load master view if allowed
+        [self.masterViewController viewWillAppear:NO];
+        [self _loadMasterView];
+        [self.view addSubview:_masterView];
+        [self.masterViewController viewDidAppear:NO];
+    } else {
+        // not allowed to load master view, update details view frame
+        _detailsView.frame = self.view.bounds;
+    }
     
     _rightSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(_rightSwipeGestureRecognized:)];
     _rightSwipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;

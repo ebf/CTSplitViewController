@@ -67,6 +67,8 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 - (void)_morphMasterViewInAnimated:(BOOL)animated;
 - (void)_morphMasterViewOutAnimated:(BOOL)animated;
 
+- (BOOL)_isMasterViewControllerVisibleInInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation;
+
 @end
 
 
@@ -459,6 +461,13 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
         animationBlock();
         completionBlock(YES);
     }
+}
+
+- (BOOL)_isMasterViewControllerVisibleInInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    CTSplitViewControllerVisibleMasterViewOrientation orientation = CTSplitViewControllerVisibleMasterViewOrientationFromUIInterfaceOrientation(interfaceOrientation);
+    
+    return orientation & _supportedMasterViewOrientations && !self.isMasterViewControllerHidden;
 }
 
 @end

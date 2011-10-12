@@ -105,7 +105,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     if (masterViewControllerWidth != _splitViewControllerFlags.masterViewControllerWidth) {
         _splitViewControllerFlags.masterViewControllerWidth = masterViewControllerWidth;
         
-        if (self.isViewLoaded && !_splitViewControllerFlags.masterViewControllerHidden) {
+        if (self.isViewLoaded && self.isMasterViewVisible) {
             // adopt masterWidth
             void(^animationBlock)(void) = ^(void) {
                 CGFloat masterWidth = _splitViewControllerFlags.masterViewControllerWidth;
@@ -160,7 +160,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
         
         if (_splitViewControllerFlags.masterViewControllerHidden) {
             [self _hideMasterViewControllerAnimated:animated];
-        } else {
+        } else if ([self _isMasterViewControllerVisibleInInterfaceOrientation:self.interfaceOrientation]) {
             [self _showMasterViewControllerAnimated:animated];
         }
     }
@@ -200,7 +200,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     [self.view addSubview:_detailsView];
     [self.detailsViewController viewDidAppear:NO];
     
-    if (!self.isMasterViewControllerHidden) {
+    if ([self _isMasterViewControllerVisibleInInterfaceOrientation:self.interfaceOrientation]) {
         // load master view if allowed
         [self.masterViewController viewWillAppear:NO];
         [self _loadMasterView];
@@ -236,6 +236,30 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 {
 	return  [self.masterViewController shouldAutorotateToInterfaceOrientation:interfaceOrientation] && 
             [self.detailsViewController shouldAutorotateToInterfaceOrientation:interfaceOrientation];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    
+    // called after rotation, we also need to layout our master and details view here, because this may be called after loadView
+    if ([self _isMasterViewControllerVisibleInInterfaceOrientation:self.interfaceOrientation]) {
+        // master view is visible
+        if (!self.isMasterViewLoaded) {
+            // but master view is not loaded
+            [self _loadMasterView];
+            [self.view addSubview:_masterView];
+        }
+        
+        CGFloat masterWidth = _splitViewControllerFlags.masterViewControllerWidth;
+        
+        _masterView.frame = CGRectMake(0.0f, 0.0f, masterWidth, CGRectGetHeight(self.view.bounds));
+        _detailsView.frame = CGRectMake(masterWidth, 0.0f, CGRectGetWidth(self.view.bounds) - masterWidth, CGRectGetHeight(self.view.bounds));
+    } else {
+        [self _unloadMasterView];
+        _detailsView.frame = self.view.bounds;
+    }
+    NSLog(@"here, %d", [self _isMasterViewControllerVisibleInInterfaceOrientation:self.interfaceOrientation]);
 }
 
 #pragma mark - UIContainerViewControllerCallbacks

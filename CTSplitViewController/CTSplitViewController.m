@@ -259,7 +259,6 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
         [self _unloadMasterView];
         _detailsView.frame = self.view.bounds;
     }
-    NSLog(@"here, %d", [self _isMasterViewControllerVisibleInInterfaceOrientation:self.interfaceOrientation]);
 }
 
 #pragma mark - UIContainerViewControllerCallbacks

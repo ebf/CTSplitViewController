@@ -8,9 +8,10 @@
 
 #import "CTSplitViewController.h"
 #import <objc/runtime.h>
+#import "CTSplitViewControllerMasterView.h"
 
 @interface CTSplitViewController () {
-    UIView *_masterView;
+    CTSplitViewControllerMasterView *_masterView;
     UIView *_detailsView;
     
     struct {
@@ -138,7 +139,7 @@
 {
     if ((self = [super init])) {
         NSAssert(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad, @"CTSplitViewController can only be used on an iPad");
-        _splitViewControllerFlags.masterViewControllerWidth = 200.0f;
+        _splitViewControllerFlags.masterViewControllerWidth = 300.0f;
     }
     return self;
 }
@@ -159,6 +160,7 @@
 - (void)loadView {
     [super loadView];
     
+#warning only load master view if not hidden
     [self.masterViewController viewWillAppear:NO];
     [self _loadMasterView];
     [self.view addSubview:_masterView];
@@ -172,12 +174,12 @@
     _rightSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(_rightSwipeGestureRecognized:)];
     _rightSwipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
     _rightSwipeGestureRecognizer.enabled = self.isMasterViewControllerHidden;
-    [_detailsView addGestureRecognizer:_rightSwipeGestureRecognizer];
+    [self.view addGestureRecognizer:_rightSwipeGestureRecognizer];
     
     _leftSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(_leftSwipeGestureRecognized:)];
     _leftSwipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
     _leftSwipeGestureRecognizer.enabled = !self.isMasterViewControllerHidden;
-    [_detailsView addGestureRecognizer:_leftSwipeGestureRecognizer];
+    [self.view addGestureRecognizer:_leftSwipeGestureRecognizer];
 }
 
 - (void)viewDidUnload 
@@ -295,6 +297,8 @@
         [self.masterViewController viewDidAppear:animated];
         _leftSwipeGestureRecognizer.enabled = NO;
         _rightSwipeGestureRecognizer.enabled = NO;
+        
+        _masterView.state = CTSplitViewControllerMasterViewStateVisible;
     };
     
     
@@ -312,8 +316,9 @@
 {
     CGFloat masterWidth = _splitViewControllerFlags.masterViewControllerWidth;
     
-    _masterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, masterWidth, CGRectGetHeight(self.view.bounds))];
+    _masterView = [[CTSplitViewControllerMasterView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, masterWidth, CGRectGetHeight(self.view.bounds))];
     _masterView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+    _masterView.state = CTSplitViewControllerMasterViewStateVisible;
     
     [_masterView insertSubview:self.masterViewController.view atIndex:0];
     self.masterViewController.view.frame = _masterView.bounds;
@@ -358,6 +363,8 @@
             [self.view addSubview:_masterView];
         }
         
+        _detailsView.userInteractionEnabled = NO;
+        _masterView.state = CTSplitViewControllerMasterViewStateMorphedIn;
         [self.view bringSubviewToFront:_masterView];
         
         [UIView animateWithDuration:0.25f 
@@ -380,6 +387,7 @@
         
         void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
             [self _unloadMasterView];
+            _detailsView.userInteractionEnabled = YES;
         };
         
         [UIView animateWithDuration:0.25f animations:animationBlock completion:completionBlock];
@@ -388,6 +396,8 @@
 }
 
 @end
+
+
 
 
 

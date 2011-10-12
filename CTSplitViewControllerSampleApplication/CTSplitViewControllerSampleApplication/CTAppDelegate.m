@@ -24,7 +24,7 @@
     splitViewController = [[CTSplitViewController alloc] init];
     
     DetailsViewController *m = [[DetailsViewController alloc] init];
-    m.view.backgroundColor = [UIColor grayColor];
+    m.view.backgroundColor = [UIColor clearColor];
     
     DetailsViewController *d = [[DetailsViewController alloc] init];
     d.view.backgroundColor = [UIColor lightGrayColor];

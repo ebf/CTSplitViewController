@@ -74,6 +74,8 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 - (BOOL)_isMasterViewControllerVisibleInInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation;
 
 - (void)_barButtonItemClicked:(UIBarButtonItem *)sender;
+- (void)_masterViewWillDisappearAndCreateBarButtonItem;
+- (void)_masterViewWillAppearAndInvalidateBarButtonItem;
 
 @end
 
@@ -338,24 +340,9 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     }
     
     if (![self _isMasterViewControllerVisibleInInterfaceOrientation:toInterfaceOrientation]) {
-        NSString *title = self.masterViewController.title;
-        if (!title) {
-            title = NSLocalizedString(@"Master", @"");
-        }
-        
-        _barButtonItem = [[UIBarButtonItem alloc] initWithTitle:title
-                                                          style:UIBarButtonItemStyleBordered 
-                                                         target:self action:@selector(_barButtonItemClicked:)];
-        
-        if ([_delegate respondsToSelector:@selector(splitViewController:willHideViewController:withBarButtonItem:)]) {
-            [_delegate splitViewController:self willHideViewController:self.masterViewController withBarButtonItem:_barButtonItem];
-        }
-    } else if ([self _isMasterViewControllerVisibleInInterfaceOrientation:toInterfaceOrientation] && _barButtonItem) {
-        if ([_delegate respondsToSelector:@selector(splitViewController:willShowViewController:invalidatingBarButtonItem:)]) {
-            [_delegate splitViewController:self willShowViewController:self.masterViewController invalidatingBarButtonItem:_barButtonItem];
-        }
-        
-        _barButtonItem = nil;
+        [self _masterViewWillDisappearAndCreateBarButtonItem];
+    } else if ([self _isMasterViewControllerVisibleInInterfaceOrientation:toInterfaceOrientation]) {
+        [self _masterViewWillAppearAndInvalidateBarButtonItem];
     }
 }
 
@@ -430,6 +417,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     };
     
     
+    [self _masterViewWillDisappearAndCreateBarButtonItem];
     [self.masterViewController viewWillDisappear:animated];
     
     if (animated) {
@@ -465,6 +453,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     };
     
     
+    [self _masterViewWillAppearAndInvalidateBarButtonItem];
     [self.masterViewController viewWillAppear:animated];
     
     if (animated) {
@@ -600,6 +589,33 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 {
     if (sender == _barButtonItem) {
         [self _morphMasterViewInAnimated:YES];
+    }
+}
+
+- (void)_masterViewWillDisappearAndCreateBarButtonItem
+{
+    NSString *title = self.masterViewController.title;
+    if (!title) {
+        title = NSLocalizedString(@"Master", @"");
+    }
+    
+    _barButtonItem = [[UIBarButtonItem alloc] initWithTitle:title
+                                                      style:UIBarButtonItemStyleBordered 
+                                                     target:self action:@selector(_barButtonItemClicked:)];
+    
+    if ([_delegate respondsToSelector:@selector(splitViewController:willHideViewController:withBarButtonItem:)]) {
+        [_delegate splitViewController:self willHideViewController:self.masterViewController withBarButtonItem:_barButtonItem];
+    }
+}
+
+- (void)_masterViewWillAppearAndInvalidateBarButtonItem
+{
+    if (_barButtonItem) {
+        if ([_delegate respondsToSelector:@selector(splitViewController:willShowViewController:invalidatingBarButtonItem:)]) {
+            [_delegate splitViewController:self willShowViewController:self.masterViewController invalidatingBarButtonItem:_barButtonItem];
+        }
+        
+        _barButtonItem = nil;
     }
 }
 

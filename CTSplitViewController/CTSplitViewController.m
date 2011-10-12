@@ -55,6 +55,11 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 @property (nonatomic, readonly) BOOL isMasterViewLoaded;
 @property (nonatomic, readonly) BOOL isMasterViewVisible;
 
+@property (nonatomic, readonly) CGRect visibleMasterFrame;
+@property (nonatomic, readonly) CGRect visibleMasterDetailsFrame;
+@property (nonatomic, readonly) CGRect hiddenMasterDetailsFrame;
+@property (nonatomic, readonly) CGRect hiddenMasterFrame;
+
 - (void)_loadDetailsView;
 - (void)_unloadDetailsView;
 
@@ -79,6 +84,26 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 @synthesize delegate=_delegate, viewControllers=_viewControllers, leftSwipeGestureRecognizer=_leftSwipeGestureRecognizer, rightSwipeGestureRecognizer=_rightSwipeGestureRecognizer, supportedMasterViewOrientations=_supportedMasterViewOrientations;
 
 #pragma mark - setters and getters
+
+- (CGRect)hiddenMasterFrame
+{
+    return CGRectMake(-self.masterViewControllerWidth, 0.0f, self.masterViewControllerWidth, CGRectGetHeight(self.view.bounds));
+}
+
+- (CGRect)visibleMasterDetailsFrame
+{
+    return CGRectMake(self.masterViewControllerWidth, 0.0f, CGRectGetWidth(self.view.bounds) - self.masterViewControllerWidth, CGRectGetHeight(self.view.bounds));
+}
+
+- (CGRect)hiddenMasterDetailsFrame
+{
+    return self.view.bounds;
+}
+
+- (CGRect)visibleMasterFrame
+{
+    return CGRectMake(0.0f, 0.0f, self.masterViewControllerWidth, CGRectGetHeight(self.view.bounds));
+}
 
 - (BOOL)isMasterViewLoaded
 {
@@ -184,7 +209,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 {
     [super didReceiveMemoryWarning];
     
-    if (!self.isMasterViewVisible) {
+    if (!self.isMasterViewVisible && self.isMasterViewLoaded) {
         [self _unloadMasterView];
     }
 }
@@ -202,10 +227,8 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     
     if ([self _isMasterViewControllerVisibleInInterfaceOrientation:self.interfaceOrientation]) {
         // load master view if allowed
-        [self.masterViewController viewWillAppear:NO];
         [self _loadMasterView];
         [self.view addSubview:_masterView];
-        [self.masterViewController viewDidAppear:NO];
     } else {
         // not allowed to load master view, update details view frame
         _detailsView.frame = self.view.bounds;
@@ -253,17 +276,15 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
             [self.view addSubview:_masterView];
         }
         
-        CGFloat masterWidth = _splitViewControllerFlags.masterViewControllerWidth;
-        
         _masterView.state = CTSplitViewControllerMasterViewStateVisible;
-        _masterView.frame = CGRectMake(0.0f, 0.0f, masterWidth, CGRectGetHeight(self.view.bounds));
-        _detailsView.frame = CGRectMake(masterWidth, 0.0f, CGRectGetWidth(self.view.bounds) - masterWidth, CGRectGetHeight(self.view.bounds));
+        _masterView.frame = self.visibleMasterFrame;
+        _detailsView.frame = self.visibleMasterDetailsFrame;
         
         _leftSwipeGestureRecognizer.enabled = NO;
         _rightSwipeGestureRecognizer.enabled = NO;
     } else {
         [self _unloadMasterView];
-        _detailsView.frame = self.view.bounds;
+        _detailsView.frame = self.hiddenMasterDetailsFrame;
         
         _leftSwipeGestureRecognizer.enabled = YES;
         _rightSwipeGestureRecognizer.enabled = YES;
@@ -274,8 +295,6 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 {
     [super willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
     
-    CGFloat masterWidth = _splitViewControllerFlags.masterViewControllerWidth;
-    
     if ([self _isMasterViewControllerVisibleInInterfaceOrientation:toInterfaceOrientation]) {
         // master view will be visible
         if (!self.isMasterViewLoaded) {
@@ -283,12 +302,12 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
             [self.view insertSubview:_masterView belowSubview:_detailsView];
         }
         
-        _masterView.frame = CGRectMake(0.0f, 0.0f, masterWidth, CGRectGetHeight(self.view.bounds));
-        _detailsView.frame = CGRectMake(masterWidth, 0.0, CGRectGetWidth(self.view.bounds) - masterWidth, CGRectGetHeight(self.view.bounds));
+        _masterView.frame = self.visibleMasterFrame;
+        _detailsView.frame = self.visibleMasterDetailsFrame;
     } else {
         // master view will not be visible
-        _masterView.frame = CGRectMake(-masterWidth, 0.0f, masterWidth, CGRectGetHeight(self.view.bounds));
-        _detailsView.frame = self.view.bounds;
+        _masterView.frame = self.hiddenMasterFrame;
+        _detailsView.frame = self.hiddenMasterDetailsFrame;
     }
 }
 
@@ -375,13 +394,8 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     }
     
     void(^animationBlock)(void) = ^(void) {
-        CGFloat masterWidth = self.masterViewControllerWidth;
-        
-        CGPoint center = _masterView.center;
-        center.x -= masterWidth;
-        _masterView.center = center;
-        
-        _detailsView.frame = self.view.bounds;
+        _masterView.frame = self.hiddenMasterFrame;
+        _detailsView.frame = self.hiddenMasterDetailsFrame;
     };
     
     void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
@@ -409,20 +423,16 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
         return;
     }
     
-    CGFloat masterWidth = _splitViewControllerFlags.masterViewControllerWidth;
-    
     if (!self.isMasterViewLoaded) {
         [self _loadMasterView];
         
-        CGPoint center = _masterView.center;
-        center.x -= masterWidth;
-        _masterView.center = center;
+        _masterView.frame = self.hiddenMasterFrame;
         [self.view addSubview:_masterView];
     }
     
     void(^animationBlock)(void) = ^(void) {
-        _masterView.frame = CGRectMake(0.0f, 0.0f, masterWidth, CGRectGetHeight(self.view.bounds));
-        _detailsView.frame = CGRectMake(masterWidth, 0.0f, CGRectGetWidth(self.view.bounds) - masterWidth, CGRectGetHeight(self.view.bounds));
+        _masterView.frame = self.visibleMasterFrame;
+        _detailsView.frame = self.visibleMasterDetailsFrame;
     };
     
     void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
@@ -444,9 +454,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 
 - (void)_loadMasterView
 {
-    CGFloat masterWidth = _splitViewControllerFlags.masterViewControllerWidth;
-    
-    _masterView = [[CTSplitViewControllerMasterView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, masterWidth, CGRectGetHeight(self.view.bounds))];
+    _masterView = [[CTSplitViewControllerMasterView alloc] initWithFrame:self.visibleMasterFrame];
     _masterView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     _masterView.state = CTSplitViewControllerMasterViewStateVisible;
     
@@ -463,9 +471,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 
 - (void)_loadDetailsView
 {
-    CGFloat masterWidth = _splitViewControllerFlags.masterViewControllerWidth;
-    
-    _detailsView = [[UIView alloc] initWithFrame:CGRectMake(masterWidth, 0.0f, CGRectGetWidth(self.view.bounds) - masterWidth, CGRectGetHeight(self.view.bounds))];
+    _detailsView = [[UIView alloc] initWithFrame:self.visibleMasterDetailsFrame];
     _detailsView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
     [_detailsView insertSubview:self.detailsViewController.view atIndex:0];
@@ -495,14 +501,10 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 
 - (void)_morphMasterViewInAnimated:(BOOL)animated
 {
-    CGFloat masterWidth = _splitViewControllerFlags.masterViewControllerWidth;
-    
     if (!self.isMasterViewLoaded) {
         [self _loadMasterView];
         
-        CGPoint center = _masterView.center;
-        center.x -= masterWidth;
-        _masterView.center = center;
+        _masterView.frame = self.hiddenMasterFrame;
         [self.view addSubview:_masterView];
     }
     
@@ -512,7 +514,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     [self.view bringSubviewToFront:_masterView];
     
     void(^animationBlock)(void) = ^(void) {
-        _masterView.frame = CGRectMake(0.0f, 0.0f, masterWidth, CGRectGetHeight(self.view.bounds));
+        _masterView.frame = self.visibleMasterFrame;
     };
     
     void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
@@ -536,11 +538,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 - (void)_morphMasterViewOutAnimated:(BOOL)animated
 {
     void(^animationBlock)(void) = ^(void) {
-        CGFloat masterWidth = self.masterViewControllerWidth;
-        
-        CGPoint center = _masterView.center;
-        center.x -= masterWidth;
-        _masterView.center = center;
+        _masterView.frame = self.hiddenMasterFrame;
     };
     
     void(^completionBlock)(BOOL finished) = ^(BOOL finished) {

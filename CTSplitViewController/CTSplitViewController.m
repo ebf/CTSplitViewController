@@ -438,10 +438,6 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 
 - (void)_showMasterViewControllerAnimated:(BOOL)animated
 {
-    if (self.isMasterViewVisible) {
-        return;
-    }
-    
     if (!self.isMasterViewLoaded) {
         [self _loadMasterView];
         
@@ -457,6 +453,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
         [self.masterViewController viewDidAppear:animated];
         
+        _detailsView.userInteractionEnabled = YES;
         _masterView.state = CTSplitViewControllerMasterViewStateVisible;
     };
     
@@ -637,9 +634,13 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 
 - (CTSplitViewController *)CTSplitViewController
 {
+    if ([UIDevice currentDevice].systemVersion.floatValue < 5.0f) {
+        return nil;
+    }
+    
     UIViewController *parentViewController = self.parentViewController;
     
-    while (![parentViewController isKindOfClass:[CTSplitViewController class]]) {
+    while (parentViewController && ![parentViewController isKindOfClass:[CTSplitViewController class]]) {
         parentViewController = parentViewController.parentViewController;
     }
     

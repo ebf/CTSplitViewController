@@ -21,18 +21,26 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    NSLog(@"-[%@ %@%d]", NSStringFromClass(self.class), NSStringFromSelector(_cmd), animated);
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    NSLog(@"-[%@ %@%d]", NSStringFromClass(self.class), NSStringFromSelector(_cmd), animated);
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    
+    NSLog(@"-[%@ %@%d]", NSStringFromClass(self.class), NSStringFromSelector(_cmd), animated);
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+    
+    NSLog(@"-[%@ %@%d]", NSStringFromClass(self.class), NSStringFromSelector(_cmd), animated);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

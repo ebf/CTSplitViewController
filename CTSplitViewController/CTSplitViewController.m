@@ -92,7 +92,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 
 - (CGRect)visibleMasterDetailsFrame
 {
-    return CGRectMake(self.masterViewControllerWidth, 0.0f, CGRectGetWidth(self.view.bounds) - self.masterViewControllerWidth, CGRectGetHeight(self.view.bounds));
+    return CGRectMake(self.masterViewControllerWidth + 1.0f, 0.0f, CGRectGetWidth(self.view.bounds) - self.masterViewControllerWidth - 1.0f, CGRectGetHeight(self.view.bounds));
 }
 
 - (CGRect)hiddenMasterDetailsFrame
@@ -218,6 +218,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 
 - (void)loadView {
     [super loadView];
+    self.view.backgroundColor = [UIColor blackColor];
     
     // first load _detailsView because its always visible
     [self.detailsViewController viewWillAppear:NO];

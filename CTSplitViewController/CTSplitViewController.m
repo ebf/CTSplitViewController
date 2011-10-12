@@ -10,6 +10,32 @@
 #import <objc/runtime.h>
 #import "CTSplitViewControllerMasterView.h"
 
+static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewControllerVisibleMasterViewOrientationFromUIInterfaceOrientation(UIInterfaceOrientation interfaceOrientation)
+{
+    switch (interfaceOrientation) {
+        case UIInterfaceOrientationPortrait:
+            return CTSplitViewControllerVisibleMasterViewOrientationPortrait;
+            break;
+        case UIInterfaceOrientationPortraitUpsideDown:
+            return CTSplitViewControllerVisibleMasterViewOrientationPortraitUpsideDown;
+            break;
+        case UIInterfaceOrientationLandscapeLeft:
+            return CTSplitViewControllerVisibleMasterViewOrientationLandscapeLeft;
+            break;
+        case UIInterfaceOrientationLandscapeRight:
+            return CTSplitViewControllerVisibleMasterViewOrientationLandscapeRight;
+            break;
+        default:
+            break;
+    }
+    
+    return CTSplitViewControllerVisibleMasterViewOrientationUnkown;
+}
+
+
+
+
+
 @interface CTSplitViewController () {
     CTSplitViewControllerMasterView *_masterView;
     UIView *_detailsView;
@@ -45,8 +71,10 @@
 
 
 
+
+
 @implementation CTSplitViewController
-@synthesize delegate=_delegate, viewControllers=_viewControllers, leftSwipeGestureRecognizer=_leftSwipeGestureRecognizer, rightSwipeGestureRecognizer=_rightSwipeGestureRecognizer;
+@synthesize delegate=_delegate, viewControllers=_viewControllers, leftSwipeGestureRecognizer=_leftSwipeGestureRecognizer, rightSwipeGestureRecognizer=_rightSwipeGestureRecognizer, supportedMasterViewOrientations=_supportedMasterViewOrientations;
 
 #pragma mark - setters and getters
 
@@ -143,6 +171,7 @@
     if ((self = [super init])) {
         NSAssert(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad, @"CTSplitViewController can only be used on an iPad");
         _splitViewControllerFlags.masterViewControllerWidth = 300.0f;
+        _supportedMasterViewOrientations = CTSplitViewControllerVisibleMasterViewOrientationLandscapeLeft | CTSplitViewControllerVisibleMasterViewOrientationLandscapeRight;
     }
     return self;
 }

@@ -11,8 +11,22 @@
 @class CTSplitViewController;
 
 @protocol CTSplitViewControllerDelegate <NSObject>
-
 @end
+
+
+
+
+
+typedef enum {
+    CTSplitViewControllerVisibleMasterViewOrientationUnkown                         = 0,
+    CTSplitViewControllerVisibleMasterViewOrientationPortrait                       = 2 << 0,
+    CTSplitViewControllerVisibleMasterViewOrientationPortraitUpsideDown             = 2 << 1,
+    CTSplitViewControllerVisibleMasterViewOrientationLandscapeLeft                  = 2 << 2,
+    CTSplitViewControllerVisibleMasterViewOrientationLandscapeRight                 = 2 << 3
+} CTSplitViewControllerVisibleMasterViewOrientation;
+typedef NSInteger CTSplitViewControllerVisibleMasterViewOrientations;
+
+
 
 
 
@@ -28,6 +42,8 @@
     
     UISwipeGestureRecognizer *_leftSwipeGestureRecognizer;
     UISwipeGestureRecognizer *_rightSwipeGestureRecognizer;
+    
+    CTSplitViewControllerVisibleMasterViewOrientations _supportedMasterViewOrientations;
 }
 
 @property (nonatomic, unsafe_unretained) id<CTSplitViewControllerDelegate> delegate;
@@ -44,6 +60,8 @@
 
 @property (nonatomic, readonly) UISwipeGestureRecognizer *leftSwipeGestureRecognizer;
 @property (nonatomic, readonly) UISwipeGestureRecognizer *rightSwipeGestureRecognizer;
+
+@property (nonatomic, assign) CTSplitViewControllerVisibleMasterViewOrientations supportedMasterViewOrientations;
 
 @end
 

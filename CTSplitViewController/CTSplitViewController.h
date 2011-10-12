@@ -25,6 +25,9 @@
     id<CTSplitViewControllerDelegate> __unsafe_unretained _delegate;
     
     NSArray *_viewControllers;
+    
+    UISwipeGestureRecognizer *_leftSwipeGestureRecognizer;
+    UISwipeGestureRecognizer *_rightSwipeGestureRecognizer;
 }
 
 @property (nonatomic, unsafe_unretained) id<CTSplitViewControllerDelegate> delegate;
@@ -38,6 +41,9 @@
 
 @property (nonatomic, assign) CGFloat masterViewControllerWidth;
 - (void)setMasterViewControllerWidth:(CGFloat)masterViewControllerWidth animated:(BOOL)animated;
+
+@property (nonatomic, readonly) UISwipeGestureRecognizer *leftSwipeGestureRecognizer;
+@property (nonatomic, readonly) UISwipeGestureRecognizer *rightSwipeGestureRecognizer;
 
 @end
 

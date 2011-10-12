@@ -23,7 +23,7 @@
     CTSplitViewController *splitViewController = [[CTSplitViewController alloc] init];
     splitViewController = [[CTSplitViewController alloc] init];
     
-    UIViewController *m = [[UITableViewController alloc] init];
+    DetailsViewController *m = [[DetailsViewController alloc] init];
     m.view.backgroundColor = [UIColor grayColor];
     
     DetailsViewController *d = [[DetailsViewController alloc] init];

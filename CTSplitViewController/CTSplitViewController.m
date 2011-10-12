@@ -25,6 +25,8 @@
 
 - (void)_loadMasterView;
 - (void)_unloadMasterView;
+@property (nonatomic, readonly) BOOL isMasterViewLoaded;
+@property (nonatomic, readonly) BOOL isMasterViewVisible;
 
 - (void)_loadDetailsView;
 - (void)_unloadDetailsView;
@@ -32,14 +34,27 @@
 - (void)_hideMasterViewControllerAnimated:(BOOL)animated;
 - (void)_showMasterViewControllerAnimated:(BOOL)animated;
 
+- (void)_rightSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer;
+- (void)_leftSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer;
+
 @end
 
 
 
 @implementation CTSplitViewController
-@synthesize delegate=_delegate, viewControllers=_viewControllers;
+@synthesize delegate=_delegate, viewControllers=_viewControllers, leftSwipeGestureRecognizer=_leftSwipeGestureRecognizer, rightSwipeGestureRecognizer=_rightSwipeGestureRecognizer;
 
 #pragma mark - setters and getters
+
+- (BOOL)isMasterViewLoaded
+{
+    return _masterView != nil;
+}
+
+- (BOOL)isMasterViewVisible
+{
+    return _masterView.superview != nil;
+}
 
 - (CGFloat)masterViewControllerWidth
 {
@@ -128,6 +143,17 @@
     return self;
 }
 
+#pragma mark - Memory management
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    
+    if (!self.isMasterViewVisible) {
+        [self _unloadMasterView];
+    }
+}
+
 #pragma mark - View lifecycle
 
 - (void)loadView {
@@ -142,16 +168,16 @@
     [self _loadDetailsView];
     [self.view addSubview:_detailsView];
     [self.detailsViewController viewDidAppear:NO];
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+    _rightSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(_rightSwipeGestureRecognized:)];
+    _rightSwipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+    _rightSwipeGestureRecognizer.enabled = self.isMasterViewControllerHidden;
+    [_detailsView addGestureRecognizer:_rightSwipeGestureRecognizer];
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    _leftSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(_leftSwipeGestureRecognized:)];
+    _leftSwipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+    _leftSwipeGestureRecognizer.enabled = !self.isMasterViewControllerHidden;
+    [_detailsView addGestureRecognizer:_leftSwipeGestureRecognizer];
 }
 
 - (void)viewDidUnload 
@@ -160,12 +186,14 @@
     
     _masterView = nil;
     _detailsView = nil;
+    _rightSwipeGestureRecognizer = nil;
+    _leftSwipeGestureRecognizer = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-	return YES;
+	return  [self.masterViewController shouldAutorotateToInterfaceOrientation:interfaceOrientation] && 
+            [self.detailsViewController shouldAutorotateToInterfaceOrientation:interfaceOrientation];
 }
 
 #pragma mark - UIContainerViewControllerCallbacks
@@ -229,6 +257,9 @@
     void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
         [self.masterViewController viewDidDisappear:animated];
         [self _unloadMasterView];
+        
+        _leftSwipeGestureRecognizer.enabled = YES;
+        _rightSwipeGestureRecognizer.enabled = YES;
     };
     
     
@@ -244,14 +275,16 @@
 
 - (void)_showMasterViewControllerAnimated:(BOOL)animated
 {
-    [self _loadMasterView];
-    
     CGFloat masterWidth = _splitViewControllerFlags.masterViewControllerWidth;
     
-    CGPoint center = _masterView.center;
-    center.x -= masterWidth;
-    _masterView.center = center;
-    [self.view addSubview:_masterView];
+    if (!self.isMasterViewLoaded) {
+        [self _loadMasterView];
+        
+        CGPoint center = _masterView.center;
+        center.x -= masterWidth;
+        _masterView.center = center;
+        [self.view addSubview:_masterView];
+    }
     
     void(^animationBlock)(void) = ^(void) {
         _masterView.frame = CGRectMake(0.0f, 0.0f, masterWidth, CGRectGetHeight(self.view.bounds));
@@ -260,6 +293,8 @@
     
     void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
         [self.masterViewController viewDidAppear:animated];
+        _leftSwipeGestureRecognizer.enabled = NO;
+        _rightSwipeGestureRecognizer.enabled = NO;
     };
     
     
@@ -307,6 +342,49 @@
 {
     [_detailsView removeFromSuperview];
     _detailsView = nil;
+}
+
+- (void)_rightSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer
+{
+    if (recognizer.state == UIGestureRecognizerStateRecognized && !self.isMasterViewVisible) {
+        CGFloat masterWidth = _splitViewControllerFlags.masterViewControllerWidth;
+        
+        if (!self.isMasterViewLoaded) {
+            [self _loadMasterView];
+            
+            CGPoint center = _masterView.center;
+            center.x -= masterWidth;
+            _masterView.center = center;
+            [self.view addSubview:_masterView];
+        }
+        
+        [self.view bringSubviewToFront:_masterView];
+        
+        [UIView animateWithDuration:0.25f 
+                         animations:^{
+                             _masterView.frame = CGRectMake(0.0f, 0.0f, masterWidth, CGRectGetHeight(self.view.bounds));
+                         } completion:nil];
+    }
+}
+
+- (void)_leftSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer
+{
+    if (recognizer.state == UIGestureRecognizerStateRecognized && self.isMasterViewVisible && _splitViewControllerFlags.masterViewControllerHidden) {
+        void(^animationBlock)(void) = ^(void) {
+            CGFloat masterWidth = self.masterViewControllerWidth;
+            
+            CGPoint center = _masterView.center;
+            center.x -= masterWidth;
+            _masterView.center = center;
+        };
+        
+        void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
+            [self _unloadMasterView];
+        };
+        
+        [UIView animateWithDuration:0.25f animations:animationBlock completion:completionBlock];
+
+    }
 }
 
 @end

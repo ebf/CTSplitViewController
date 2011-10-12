@@ -345,6 +345,10 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 
 - (void)_hideMasterViewControllerAnimated:(BOOL)animated
 {
+    if (!self.isMasterViewVisible) {
+        return;
+    }
+    
     void(^animationBlock)(void) = ^(void) {
         CGFloat masterWidth = self.masterViewControllerWidth;
         
@@ -376,6 +380,10 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 
 - (void)_showMasterViewControllerAnimated:(BOOL)animated
 {
+    if (self.isMasterViewVisible) {
+        return;
+    }
+    
     CGFloat masterWidth = _splitViewControllerFlags.masterViewControllerWidth;
     
     if (!self.isMasterViewLoaded) {

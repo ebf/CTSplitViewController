@@ -473,6 +473,8 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
         [self.view addSubview:_masterView];
     }
     
+    [self.masterViewController viewWillAppear:animated];
+    
     _masterView.state = CTSplitViewControllerMasterViewStateMorphedIn;
     [self.view bringSubviewToFront:_masterView];
     
@@ -482,6 +484,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     
     void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
         _detailsView.userInteractionEnabled = NO;
+        [self.masterViewController viewDidAppear:animated];
     };
     
     if (animated) {
@@ -510,7 +513,10 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
         [self _unloadMasterView];
         _detailsView.userInteractionEnabled = YES;
+        [self.masterViewController viewDidDisappear:animated];
     };
+    
+    [self.masterViewController viewWillDisappear:animated];
     
     if (animated) {
         [UIView animateWithDuration:0.25f animations:animationBlock completion:completionBlock];

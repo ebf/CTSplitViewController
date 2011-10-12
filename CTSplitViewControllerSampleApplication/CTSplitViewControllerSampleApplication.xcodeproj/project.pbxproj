@@ -15,6 +15,7 @@
 		A72C8B90144431A100F845A2 /* CTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A72C8B8F144431A100F845A2 /* CTAppDelegate.m */; };
 		A72C8B981444320000F845A2 /* CTSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A72C8B971444320000F845A2 /* CTSplitViewController.m */; };
 		A74F0E5E1445B9AB0062A475 /* CTSplitViewControllerMasterView.m in Sources */ = {isa = PBXBuildFile; fileRef = A74F0E5D1445B9AB0062A475 /* CTSplitViewControllerMasterView.m */; };
+		A74F0E651445DEFA0062A475 /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A74F0E641445DEFA0062A475 /* MasterViewController.m */; };
 		A75B0F5D144498B000204A98 /* DetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A75B0F5C144498B000204A98 /* DetailsViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -33,6 +34,8 @@
 		A72C8B971444320000F845A2 /* CTSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CTSplitViewController.m; path = ../CTSplitViewController/CTSplitViewController.m; sourceTree = "<group>"; };
 		A74F0E5C1445B9AB0062A475 /* CTSplitViewControllerMasterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTSplitViewControllerMasterView.h; sourceTree = "<group>"; };
 		A74F0E5D1445B9AB0062A475 /* CTSplitViewControllerMasterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTSplitViewControllerMasterView.m; sourceTree = "<group>"; };
+		A74F0E631445DEFA0062A475 /* MasterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
+		A74F0E641445DEFA0062A475 /* MasterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
 		A75B0F5B144498B000204A98 /* DetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailsViewController.h; sourceTree = "<group>"; };
 		A75B0F5C144498B000204A98 /* DetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,6 +90,8 @@
 				A72C8B86144431A100F845A2 /* Supporting Files */,
 				A75B0F5B144498B000204A98 /* DetailsViewController.h */,
 				A75B0F5C144498B000204A98 /* DetailsViewController.m */,
+				A74F0E631445DEFA0062A475 /* MasterViewController.h */,
+				A74F0E641445DEFA0062A475 /* MasterViewController.m */,
 			);
 			path = CTSplitViewControllerSampleApplication;
 			sourceTree = "<group>";
@@ -180,6 +185,7 @@
 				A72C8B981444320000F845A2 /* CTSplitViewController.m in Sources */,
 				A75B0F5D144498B000204A98 /* DetailsViewController.m in Sources */,
 				A74F0E5E1445B9AB0062A475 /* CTSplitViewControllerMasterView.m in Sources */,
+				A74F0E651445DEFA0062A475 /* MasterViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -292,6 +292,31 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     }
 }
 
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    
+    BOOL animated = duration > 0.0;
+    
+    if ([self _isMasterViewControllerVisibleInInterfaceOrientation:toInterfaceOrientation] && !self.isMasterViewVisible) {
+        [self.masterViewController viewWillAppear:animated];
+        
+        double delayInSeconds = duration;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [self.masterViewController viewDidAppear:animated];
+        });
+    } else if (![self _isMasterViewControllerVisibleInInterfaceOrientation:toInterfaceOrientation] && self.isMasterViewVisible) {
+        [self.masterViewController viewWillDisappear:animated];
+        
+        double delayInSeconds = duration;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [self.masterViewController viewDidDisappear:animated];
+        });
+    }
+}
+
 #pragma mark - UIContainerViewControllerCallbacks
 
 - (BOOL)automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers

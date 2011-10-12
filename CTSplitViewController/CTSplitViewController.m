@@ -611,16 +611,16 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
                                                       style:UIBarButtonItemStyleBordered 
                                                      target:self action:@selector(_barButtonItemClicked:)];
     
-    if ([_delegate respondsToSelector:@selector(splitViewController:willHideViewController:withBarButtonItem:)]) {
-        [_delegate splitViewController:self willHideViewController:self.masterViewController withBarButtonItem:_barButtonItem];
+    if ([_delegate respondsToSelector:@selector(CTSplitViewController:willHideViewController:withBarButtonItem:)]) {
+        [_delegate CTSplitViewController:self willHideViewController:self.masterViewController withBarButtonItem:_barButtonItem];
     }
 }
 
 - (void)_masterViewWillAppearAndInvalidateBarButtonItem
 {
     if (_barButtonItem) {
-        if ([_delegate respondsToSelector:@selector(splitViewController:willShowViewController:invalidatingBarButtonItem:)]) {
-            [_delegate splitViewController:self willShowViewController:self.masterViewController invalidatingBarButtonItem:_barButtonItem];
+        if ([_delegate respondsToSelector:@selector(CTSplitViewController:willShowViewController:invalidatingBarButtonItem:)]) {
+            [_delegate CTSplitViewController:self willShowViewController:self.masterViewController invalidatingBarButtonItem:_barButtonItem];
         }
         
         _barButtonItem = nil;

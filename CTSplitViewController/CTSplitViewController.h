@@ -15,12 +15,12 @@
 @protocol CTSplitViewControllerDelegate <NSObject>
 
 @optional
-- (void)splitViewController:(CTSplitViewController*)splitViewController 
+- (void)CTSplitViewController:(CTSplitViewController*)splitViewController 
      willHideViewController:(UIViewController *)viewController 
           withBarButtonItem:(UIBarButtonItem *)barButtonItem;
 
-- (void)splitViewController:(CTSplitViewController *)splitViewController 
-     willShowViewController:(UIViewController *)ievwController 
+- (void)CTSplitViewController:(CTSplitViewController *)splitViewController 
+     willShowViewController:(UIViewController *)viewController 
   invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem;
 @end
 

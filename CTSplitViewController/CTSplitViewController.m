@@ -247,6 +247,14 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     [self.view addGestureRecognizer:_leftSwipeGestureRecognizer];
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    if (![self _isMasterViewControllerVisibleInInterfaceOrientation:self.interfaceOrientation]) {
+        [self _masterViewWillDisappearAndCreateBarButtonItem];
+    }
+}
+
 - (void)viewDidUnload 
 {
     [super viewDidUnload];

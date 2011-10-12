@@ -213,12 +213,10 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     
     _rightSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(_rightSwipeGestureRecognized:)];
     _rightSwipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
-    _rightSwipeGestureRecognizer.enabled = self.isMasterViewControllerHidden;
     [self.view addGestureRecognizer:_rightSwipeGestureRecognizer];
     
     _leftSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(_leftSwipeGestureRecognized:)];
     _leftSwipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
-    _leftSwipeGestureRecognizer.enabled = !self.isMasterViewControllerHidden;
     [self.view addGestureRecognizer:_leftSwipeGestureRecognizer];
 }
 
@@ -244,6 +242,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 {
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     
+#warning update master view state and gesture recognizers
     // called after rotation, we also need to layout our master and details view here, because this may be called after loadView
     if ([self _isMasterViewControllerVisibleInInterfaceOrientation:self.interfaceOrientation]) {
         // master view is visible
@@ -346,9 +345,6 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
         [self.masterViewController viewDidDisappear:animated];
         [self _unloadMasterView];
-        
-        _leftSwipeGestureRecognizer.enabled = YES;
-        _rightSwipeGestureRecognizer.enabled = YES;
     };
     
     
@@ -382,8 +378,6 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     
     void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
         [self.masterViewController viewDidAppear:animated];
-        _leftSwipeGestureRecognizer.enabled = NO;
-        _rightSwipeGestureRecognizer.enabled = NO;
         
         _masterView.state = CTSplitViewControllerMasterViewStateVisible;
     };
@@ -438,14 +432,14 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 
 - (void)_rightSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer
 {
-    if (recognizer.state == UIGestureRecognizerStateRecognized && !self.isMasterViewVisible) {
+    if (recognizer.state == UIGestureRecognizerStateRecognized && ![self _isMasterViewControllerVisibleInInterfaceOrientation:self.interfaceOrientation]) {
         [self _morphMasterViewInAnimated:YES];
     }
 }
 
 - (void)_leftSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer
 {
-    if (recognizer.state == UIGestureRecognizerStateRecognized && self.isMasterViewVisible && _splitViewControllerFlags.masterViewControllerHidden) {
+    if (recognizer.state == UIGestureRecognizerStateRecognized && ![self _isMasterViewControllerVisibleInInterfaceOrientation:self.interfaceOrientation] && self.isMasterViewVisible) {
         [self _morphMasterViewOutAnimated:YES];
     }
 }

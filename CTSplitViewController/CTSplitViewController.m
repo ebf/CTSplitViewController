@@ -318,17 +318,22 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     [self addChildViewController:self.masterViewController];
     [self addChildViewController:self.detailsViewController];
     
+    if (self.isViewLoaded) {
+        [self.masterViewController viewWillAppear:NO];
+        [self.detailsViewController viewWillAppear:NO];
+        
+        [self _reloadView];
+        
+        [self.masterViewController viewDidAppear:NO];
+        [self.detailsViewController viewDidAppear:NO];
+    }
+    
     [self.masterViewController didMoveToParentViewController:self];
     [self.detailsViewController didMoveToParentViewController:self];
-    
-    if (self.isViewLoaded) {
-        [self _reloadView];
-    }
 }
 
 - (void)_reloadView
 {
-#warning inform viewControllers about view changes
     [_masterView insertSubview:self.masterViewController.view atIndex:0];
     self.masterViewController.view.frame = _masterView.bounds;
     self.masterViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;

@@ -73,6 +73,8 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 
 - (BOOL)_isMasterViewControllerVisibleInInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation;
 
+- (void)_barButtonItemClicked:(UIBarButtonItem *)sender;
+
 @end
 
 
@@ -334,6 +336,27 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
             [self.masterViewController viewDidDisappear:animated];
         });
     }
+    
+    if (![self _isMasterViewControllerVisibleInInterfaceOrientation:toInterfaceOrientation]) {
+        NSString *title = self.masterViewController.title;
+        if (!title) {
+            title = NSLocalizedString(@"Master", @"");
+        }
+        
+        _barButtonItem = [[UIBarButtonItem alloc] initWithTitle:title
+                                                          style:UIBarButtonItemStyleBordered 
+                                                         target:self action:@selector(_barButtonItemClicked:)];
+        
+        if ([_delegate respondsToSelector:@selector(splitViewController:willHideViewController:withBarButtonItem:)]) {
+            [_delegate splitViewController:self willHideViewController:self.masterViewController withBarButtonItem:_barButtonItem];
+        }
+    } else if ([self _isMasterViewControllerVisibleInInterfaceOrientation:toInterfaceOrientation] && _barButtonItem) {
+        if ([_delegate respondsToSelector:@selector(splitViewController:willShowViewController:invalidatingBarButtonItem:)]) {
+            [_delegate splitViewController:self willShowViewController:self.masterViewController invalidatingBarButtonItem:_barButtonItem];
+        }
+        
+        _barButtonItem = nil;
+    }
 }
 
 #pragma mark - UIContainerViewControllerCallbacks
@@ -571,6 +594,13 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     CTSplitViewControllerVisibleMasterViewOrientation orientation = CTSplitViewControllerVisibleMasterViewOrientationFromUIInterfaceOrientation(interfaceOrientation);
     
     return orientation & _supportedMasterViewOrientations && !self.isMasterViewControllerHidden;
+}
+
+- (void)_barButtonItemClicked:(UIBarButtonItem *)sender
+{
+    if (sender == _barButtonItem) {
+        [self _morphMasterViewInAnimated:YES];
+    }
 }
 
 @end

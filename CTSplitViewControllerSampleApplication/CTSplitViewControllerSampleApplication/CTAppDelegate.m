@@ -7,9 +7,15 @@
 //
 
 #import "CTAppDelegate.h"
-#import "CTSplitViewController.h"
 #import "DetailsViewController.h"
 #import "MasterViewController.h"
+
+@interface CTAppDelegate () {
+    UIViewController *_detailsViewController;
+    UINavigationController *_navigationController;
+}
+
+@end
 
 @implementation CTAppDelegate
 
@@ -22,7 +28,7 @@
     self.window.backgroundColor = [UIColor whiteColor];
     
     CTSplitViewController *splitViewController = [[CTSplitViewController alloc] init];
-    splitViewController = [[CTSplitViewController alloc] init];
+    splitViewController.delegate = self;
     
     MasterViewController *m = [[MasterViewController alloc] init];
     DetailsViewController *d = [[DetailsViewController alloc] init];
@@ -30,10 +36,29 @@
     
     splitViewController.viewControllers = [NSArray arrayWithObjects:m, n, nil];
     
+    _detailsViewController = d;
+    _navigationController = n;
+    
     self.window.rootViewController = splitViewController;
     
     [self.window makeKeyAndVisible];
     return YES;
+}
+
+#pragma mark - CTSplitViewControllerDelegate
+
+- (void)splitViewController:(CTSplitViewController *)splitViewController 
+     willShowViewController:(UIViewController *)ievwController 
+  invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
+{
+    _detailsViewController.navigationItem.leftBarButtonItem = nil;
+}
+
+- (void)splitViewController:(CTSplitViewController *)splitViewController 
+     willHideViewController:(UIViewController *)viewController 
+          withBarButtonItem:(UIBarButtonItem *)barButtonItem
+{
+    _detailsViewController.navigationItem.leftBarButtonItem = barButtonItem;
 }
 
 #pragma mark - UISplitViewControllerDelegate

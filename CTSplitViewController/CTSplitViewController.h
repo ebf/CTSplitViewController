@@ -13,6 +13,15 @@
 @class CTSplitViewController;
 
 @protocol CTSplitViewControllerDelegate <NSObject>
+
+@optional
+- (void)splitViewController:(CTSplitViewController*)splitViewController 
+     willHideViewController:(UIViewController *)viewController 
+          withBarButtonItem:(UIBarButtonItem *)barButtonItem;
+
+- (void)splitViewController:(CTSplitViewController *)splitViewController 
+     willShowViewController:(UIViewController *)ievwController 
+  invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem;
 @end
 
 
@@ -41,6 +50,8 @@ typedef NSInteger CTSplitViewControllerVisibleMasterViewOrientations;
     id<CTSplitViewControllerDelegate> __unsafe_unretained _delegate;
     
     NSArray *_viewControllers;
+    
+    UIBarButtonItem *_barButtonItem;
     
     UISwipeGestureRecognizer *_leftSwipeGestureRecognizer;
     UISwipeGestureRecognizer *_rightSwipeGestureRecognizer;

@@ -7,7 +7,6 @@
 //
 
 #import "CTSplitViewController.h"
-#import <objc/runtime.h>
 #import "CTSplitViewControllerMasterView.h"
 
 static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewControllerVisibleMasterViewOrientationFromUIInterfaceOrientation(UIInterfaceOrientation interfaceOrientation)
@@ -459,9 +458,13 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     _masterView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     _masterView.state = CTSplitViewControllerMasterViewStateVisible;
     
-    [_masterView insertSubview:self.masterViewController.view atIndex:0];
-    self.masterViewController.view.frame = _masterView.bounds;
-    self.masterViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    UIView *view = self.masterViewController.view;
+    [_masterView insertSubview:view atIndex:0];
+    view.frame = _masterView.bounds;
+    view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    view.layer.cornerRadius = 3.0f;
+    view.layer.masksToBounds = YES;
 }
 
 - (void)_unloadMasterView
@@ -478,6 +481,11 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     [_detailsView insertSubview:self.detailsViewController.view atIndex:0];
     self.detailsViewController.view.frame = _detailsView.bounds;
     self.detailsViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    UIImageView *cornerImageView = [[UIImageView alloc] initWithFrame:_detailsView.bounds];
+    cornerImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    cornerImageView.image = [[UIImage imageNamed:@"CTSplitViewCornerImage.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(3.0f, 3.0f, 3.0f, 3.0f)];
+    [_detailsView addSubview:cornerImageView];
 }
 
 - (void)_unloadDetailsView

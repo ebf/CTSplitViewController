@@ -39,14 +39,14 @@
 - (id)initWithFrame:(CGRect)frame 
 {
     if ((self = [super initWithFrame:frame])) {
-        self.backgroundColor = [UIColor blackColor];
+        self.backgroundColor = [UIColor clearColor];
         
         CALayer *layer = self.layer;
         
         layer.shadowColor = [UIColor blackColor].CGColor;
         layer.shadowOffset = CGSizeMake(0.0f, 1.0f);
         layer.shadowOpacity = 0.0f;
-        layer.shadowRadius = 10.0f;
+        layer.shadowRadius = 5.0f;
     }
     return self;
 }
@@ -55,7 +55,7 @@
 {
     [super layoutSubviews];
     
-    self.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:10.0f].CGPath;
+    self.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:self.layer.shadowRadius].CGPath;
 }
 
 /*

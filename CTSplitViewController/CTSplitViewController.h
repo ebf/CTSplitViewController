@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <objc/runtime.h>
+#import <QuartzCore/QuartzCore.h>
 
 @class CTSplitViewController;
 

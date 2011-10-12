@@ -38,6 +38,9 @@
 - (void)_rightSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer;
 - (void)_leftSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer;
 
+- (void)_morphMasterViewInAnimated:(BOOL)animated;
+- (void)_morphMasterViewOutAnimated:(BOOL)animated;
+
 @end
 
 
@@ -358,46 +361,74 @@
 - (void)_rightSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer
 {
     if (recognizer.state == UIGestureRecognizerStateRecognized && !self.isMasterViewVisible) {
-        CGFloat masterWidth = _splitViewControllerFlags.masterViewControllerWidth;
-        
-        if (!self.isMasterViewLoaded) {
-            [self _loadMasterView];
-            
-            CGPoint center = _masterView.center;
-            center.x -= masterWidth;
-            _masterView.center = center;
-            [self.view addSubview:_masterView];
-        }
-        
-        _detailsView.userInteractionEnabled = NO;
-        _masterView.state = CTSplitViewControllerMasterViewStateMorphedIn;
-        [self.view bringSubviewToFront:_masterView];
-        
-        [UIView animateWithDuration:0.25f 
-                         animations:^{
-                             _masterView.frame = CGRectMake(0.0f, 0.0f, masterWidth, CGRectGetHeight(self.view.bounds));
-                         } completion:nil];
+        [self _morphMasterViewInAnimated:YES];
     }
 }
 
 - (void)_leftSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer
 {
     if (recognizer.state == UIGestureRecognizerStateRecognized && self.isMasterViewVisible && _splitViewControllerFlags.masterViewControllerHidden) {
-        void(^animationBlock)(void) = ^(void) {
-            CGFloat masterWidth = self.masterViewControllerWidth;
-            
-            CGPoint center = _masterView.center;
-            center.x -= masterWidth;
-            _masterView.center = center;
-        };
-        
-        void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
-            [self _unloadMasterView];
-            _detailsView.userInteractionEnabled = YES;
-        };
-        
-        [UIView animateWithDuration:0.25f animations:animationBlock completion:completionBlock];
+        [self _morphMasterViewOutAnimated:YES];
+    }
+}
 
+- (void)_morphMasterViewInAnimated:(BOOL)animated
+{
+    CGFloat masterWidth = _splitViewControllerFlags.masterViewControllerWidth;
+    
+    if (!self.isMasterViewLoaded) {
+        [self _loadMasterView];
+        
+        CGPoint center = _masterView.center;
+        center.x -= masterWidth;
+        _masterView.center = center;
+        [self.view addSubview:_masterView];
+    }
+    
+    _masterView.state = CTSplitViewControllerMasterViewStateMorphedIn;
+    [self.view bringSubviewToFront:_masterView];
+    
+    void(^animationBlock)(void) = ^(void) {
+        _masterView.frame = CGRectMake(0.0f, 0.0f, masterWidth, CGRectGetHeight(self.view.bounds));
+    };
+    
+    void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
+        _detailsView.userInteractionEnabled = NO;
+    };
+    
+    if (animated) {
+        [UIView animateWithDuration:0.25f animations:animationBlock completion:completionBlock];
+    } else {
+        animationBlock();
+        completionBlock(YES);
+    }
+    
+    [UIView animateWithDuration:0.25f 
+                     animations:^{
+                         
+                     } completion:nil];
+}
+
+- (void)_morphMasterViewOutAnimated:(BOOL)animated
+{
+    void(^animationBlock)(void) = ^(void) {
+        CGFloat masterWidth = self.masterViewControllerWidth;
+        
+        CGPoint center = _masterView.center;
+        center.x -= masterWidth;
+        _masterView.center = center;
+    };
+    
+    void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
+        [self _unloadMasterView];
+        _detailsView.userInteractionEnabled = YES;
+    };
+    
+    if (animated) {
+        [UIView animateWithDuration:0.25f animations:animationBlock completion:completionBlock];
+    } else {
+        animationBlock();
+        completionBlock(YES);
     }
 }
 

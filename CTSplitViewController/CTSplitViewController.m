@@ -232,6 +232,8 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     _leftSwipeGestureRecognizer = nil;
 }
 
+#pragma mark - rotation support
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
 	return  [self.masterViewController shouldAutorotateToInterfaceOrientation:interfaceOrientation] && 
@@ -257,6 +259,28 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
         _detailsView.frame = CGRectMake(masterWidth, 0.0f, CGRectGetWidth(self.view.bounds) - masterWidth, CGRectGetHeight(self.view.bounds));
     } else {
         [self _unloadMasterView];
+        _detailsView.frame = self.view.bounds;
+    }
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [super willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    
+    CGFloat masterWidth = _splitViewControllerFlags.masterViewControllerWidth;
+    
+    if ([self _isMasterViewControllerVisibleInInterfaceOrientation:toInterfaceOrientation]) {
+        // master view will be visible
+        if (!self.isMasterViewLoaded) {
+            [self _loadMasterView];
+            [self.view insertSubview:_masterView belowSubview:_detailsView];
+        }
+        
+        _masterView.frame = CGRectMake(0.0f, 0.0f, masterWidth, CGRectGetHeight(self.view.bounds));
+        _detailsView.frame = CGRectMake(masterWidth, 0.0, CGRectGetWidth(self.view.bounds) - masterWidth, CGRectGetHeight(self.view.bounds));
+    } else {
+        // master view will not be visible
+        _masterView.frame = CGRectMake(-masterWidth, 0.0f, masterWidth, CGRectGetHeight(self.view.bounds));
         _detailsView.frame = self.view.bounds;
     }
 }

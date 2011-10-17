@@ -380,6 +380,20 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     return YES;
 }
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if (gestureRecognizer == _tapGestureRecognizer) {
+        UIView *recognizerView = gestureRecognizer.view;
+        
+        CGPoint locationInMasterView = [recognizerView convertPoint:[touch locationInView:recognizerView] toView:_masterView];
+        CGRect masterViewFrame = _masterView.frame;
+        
+        return !CGRectContainsPoint(masterViewFrame, locationInMasterView);
+    }
+    
+    return YES;
+}
+
 #pragma mark - private implementation ()
 
 - (void)_removeViewControllers
@@ -543,8 +557,14 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 
 - (void)_tapGestureRecognized:(UITapGestureRecognizer *)recognizer
 {
-    NSLog(@"Wow, recognized");
-#warning implement
+    UIView *recognizerView = recognizer.view;
+    
+    CGPoint locationInDetailsView = [recognizerView convertPoint:[recognizer locationInView:recognizerView] toView:_detailsView];
+    CGRect detailsViewFrame = _detailsView.frame;
+    
+    if (CGRectContainsPoint(detailsViewFrame, locationInDetailsView)) {
+        [self _morphMasterViewOutAnimated:YES];
+    }
 }
 
 - (void)_morphMasterViewInAnimated:(BOOL)animated

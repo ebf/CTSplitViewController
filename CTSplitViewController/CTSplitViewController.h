@@ -45,7 +45,7 @@ typedef NSInteger CTSplitViewControllerVisibleMasterViewOrientations;
  @class         CTSplitViewController
  @abstract      parent view controller that mimics the behaviour of a UISplitViewController but with additional features.
  */
-@interface CTSplitViewController : UIViewController {
+@interface CTSplitViewController : UIViewController <UIGestureRecognizerDelegate> {
 @private
     id<CTSplitViewControllerDelegate> __unsafe_unretained _delegate;
     
@@ -55,6 +55,7 @@ typedef NSInteger CTSplitViewControllerVisibleMasterViewOrientations;
     
     UISwipeGestureRecognizer *_leftSwipeGestureRecognizer;
     UISwipeGestureRecognizer *_rightSwipeGestureRecognizer;
+    UITapGestureRecognizer *_tapGestureRecognizer;
     
     CTSplitViewControllerVisibleMasterViewOrientations _supportedMasterViewOrientations;
 }
@@ -73,6 +74,7 @@ typedef NSInteger CTSplitViewControllerVisibleMasterViewOrientations;
 
 @property (nonatomic, readonly) UISwipeGestureRecognizer *leftSwipeGestureRecognizer;
 @property (nonatomic, readonly) UISwipeGestureRecognizer *rightSwipeGestureRecognizer;
+@property (nonatomic, readonly) UITapGestureRecognizer *tapGestureRecognizer;
 
 @property (nonatomic, assign) CTSplitViewControllerVisibleMasterViewOrientations supportedMasterViewOrientations;
 

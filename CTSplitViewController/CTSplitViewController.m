@@ -67,6 +67,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 
 - (void)_rightSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer;
 - (void)_leftSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer;
+- (void)_tapGestureRecognized:(UITapGestureRecognizer *)recognizer;
 
 - (void)_morphMasterViewInAnimated:(BOOL)animated;
 - (void)_morphMasterViewOutAnimated:(BOOL)animated;
@@ -84,7 +85,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 
 
 @implementation CTSplitViewController
-@synthesize delegate=_delegate, viewControllers=_viewControllers, leftSwipeGestureRecognizer=_leftSwipeGestureRecognizer, rightSwipeGestureRecognizer=_rightSwipeGestureRecognizer, supportedMasterViewOrientations=_supportedMasterViewOrientations;
+@synthesize delegate=_delegate, viewControllers=_viewControllers, leftSwipeGestureRecognizer=_leftSwipeGestureRecognizer, rightSwipeGestureRecognizer=_rightSwipeGestureRecognizer, tapGestureRecognizer=_tapGestureRecognizer, supportedMasterViewOrientations=_supportedMasterViewOrientations;
 
 #pragma mark - setters and getters
 
@@ -240,11 +241,19 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     
     _rightSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(_rightSwipeGestureRecognized:)];
     _rightSwipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+    _rightSwipeGestureRecognizer.delegate = self;
     [self.view addGestureRecognizer:_rightSwipeGestureRecognizer];
     
     _leftSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(_leftSwipeGestureRecognized:)];
     _leftSwipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+    _leftSwipeGestureRecognizer.delegate = self;
     [self.view addGestureRecognizer:_leftSwipeGestureRecognizer];
+    
+    _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_tapGestureRecognized:)];
+    _tapGestureRecognizer.numberOfTapsRequired = 1;
+    _tapGestureRecognizer.numberOfTouchesRequired = 1;
+    _tapGestureRecognizer.delegate = self;
+    [self.view addGestureRecognizer:_tapGestureRecognizer];
 }
 
 - (void)viewDidLoad
@@ -263,6 +272,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     _detailsView = nil;
     _rightSwipeGestureRecognizer = nil;
     _leftSwipeGestureRecognizer = nil;
+    _tapGestureRecognizer = nil;
 }
 
 #pragma mark - rotation support
@@ -291,15 +301,9 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
         _masterView.state = CTSplitViewControllerMasterViewStateVisible;
         _masterView.frame = self.visibleMasterFrame;
         _detailsView.frame = self.visibleMasterDetailsFrame;
-        
-        _leftSwipeGestureRecognizer.enabled = NO;
-        _rightSwipeGestureRecognizer.enabled = NO;
     } else {
         [self _unloadMasterView];
         _detailsView.frame = self.hiddenMasterDetailsFrame;
-        
-        _leftSwipeGestureRecognizer.enabled = YES;
-        _rightSwipeGestureRecognizer.enabled = YES;
     }
 }
 
@@ -361,6 +365,21 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     return NO;
 }
 
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    if (gestureRecognizer == _tapGestureRecognizer) {
+        return _masterView.state == CTSplitViewControllerMasterViewStateMorphedIn;
+    } else if (gestureRecognizer == _leftSwipeGestureRecognizer) {
+        return _masterView.state == CTSplitViewControllerMasterViewStateMorphedIn;
+    } else if (gestureRecognizer == _rightSwipeGestureRecognizer) {
+        return ![self _isMasterViewControllerVisibleInInterfaceOrientation:self.interfaceOrientation] && _masterView.state != CTSplitViewControllerMasterViewStateMorphedIn;
+    }
+    
+    return YES;
+}
+
 #pragma mark - private implementation ()
 
 - (void)_removeViewControllers
@@ -419,9 +438,6 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
         [self.masterViewController viewDidDisappear:animated];
         [self _unloadMasterView];
-        
-        _leftSwipeGestureRecognizer.enabled = YES;
-        _rightSwipeGestureRecognizer.enabled = YES;
     };
     
     
@@ -523,6 +539,12 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     if (recognizer.state == UIGestureRecognizerStateRecognized && ![self _isMasterViewControllerVisibleInInterfaceOrientation:self.interfaceOrientation] && self.isMasterViewVisible) {
         [self _morphMasterViewOutAnimated:YES];
     }
+}
+
+- (void)_tapGestureRecognized:(UITapGestureRecognizer *)recognizer
+{
+    NSLog(@"Wow, recognized");
+#warning implement
 }
 
 - (void)_morphMasterViewInAnimated:(BOOL)animated

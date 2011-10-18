@@ -70,9 +70,6 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 - (void)_leftSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer;
 - (void)_tapGestureRecognized:(UITapGestureRecognizer *)recognizer;
 
-- (void)_morphMasterViewInAnimated:(BOOL)animated;
-- (void)_morphMasterViewOutAnimated:(BOOL)animated;
-
 - (BOOL)_isMasterViewControllerVisibleInInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation;
 
 - (void)_barButtonItemClicked:(UIBarButtonItem *)sender;
@@ -398,6 +395,75 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     return YES;
 }
 
+#pragma mark - Instance methods
+
+- (void)morphMasterViewControllerInAnimated:(BOOL)animated
+{
+    if (self.isMasterViewVisible) {
+        return;
+    }
+    
+    if (!self.isMasterViewLoaded) {
+        [self _loadMasterView];
+        
+        _masterView.frame = self.hiddenMasterFrame;
+        [self.view addSubview:_masterView];
+    }
+    
+    [self.masterViewController viewWillAppear:animated];
+    
+    _masterView.state = CTSplitViewControllerMasterViewStateMorphedIn;
+    [self.view bringSubviewToFront:_masterView];
+    
+    void(^animationBlock)(void) = ^(void) {
+        _masterView.frame = self.visibleMasterFrame;
+        _detailsOverlayView.alpha = 1.0f;
+    };
+    
+    void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
+        _detailsView.userInteractionEnabled = NO;
+        [self.masterViewController viewDidAppear:animated];
+    };
+    
+    if (animated) {
+        [UIView animateWithDuration:0.25f animations:animationBlock completion:completionBlock];
+    } else {
+        animationBlock();
+        completionBlock(YES);
+    }
+    
+    [UIView animateWithDuration:0.25f 
+                     animations:^{
+                         
+                     } completion:nil];
+}
+
+- (void)morphMasterViewControllerOutAnimated:(BOOL)animated
+{
+    if (_masterView.state != CTSplitViewControllerMasterViewStateMorphedIn) {
+        return;
+    }
+    void(^animationBlock)(void) = ^(void) {
+        _masterView.frame = self.hiddenMasterFrame;
+        _detailsOverlayView.alpha = 0.0f;
+    };
+    
+    void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
+        [self _unloadMasterView];
+        _detailsView.userInteractionEnabled = YES;
+        [self.masterViewController viewDidDisappear:animated];
+    };
+    
+    [self.masterViewController viewWillDisappear:animated];
+    
+    if (animated) {
+        [UIView animateWithDuration:0.25f animations:animationBlock completion:completionBlock];
+    } else {
+        animationBlock();
+        completionBlock(YES);
+    }
+}
+
 #pragma mark - private implementation ()
 
 - (void)_removeViewControllers
@@ -554,14 +620,14 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 - (void)_rightSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer
 {
     if (recognizer.state == UIGestureRecognizerStateRecognized && ![self _isMasterViewControllerVisibleInInterfaceOrientation:self.interfaceOrientation]) {
-        [self _morphMasterViewInAnimated:YES];
+        [self morphMasterViewControllerInAnimated:YES];
     }
 }
 
 - (void)_leftSwipeGestureRecognized:(UISwipeGestureRecognizer *)recognizer
 {
     if (recognizer.state == UIGestureRecognizerStateRecognized && ![self _isMasterViewControllerVisibleInInterfaceOrientation:self.interfaceOrientation] && self.isMasterViewVisible) {
-        [self _morphMasterViewOutAnimated:YES];
+        [self morphMasterViewControllerOutAnimated:YES];
     }
 }
 
@@ -573,67 +639,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     CGRect detailsViewFrame = _detailsView.frame;
     
     if (CGRectContainsPoint(detailsViewFrame, locationInDetailsView)) {
-        [self _morphMasterViewOutAnimated:YES];
-    }
-}
-
-- (void)_morphMasterViewInAnimated:(BOOL)animated
-{
-    if (!self.isMasterViewLoaded) {
-        [self _loadMasterView];
-        
-        _masterView.frame = self.hiddenMasterFrame;
-        [self.view addSubview:_masterView];
-    }
-    
-    [self.masterViewController viewWillAppear:animated];
-    
-    _masterView.state = CTSplitViewControllerMasterViewStateMorphedIn;
-    [self.view bringSubviewToFront:_masterView];
-    
-    void(^animationBlock)(void) = ^(void) {
-        _masterView.frame = self.visibleMasterFrame;
-        _detailsOverlayView.alpha = 1.0f;
-    };
-    
-    void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
-        _detailsView.userInteractionEnabled = NO;
-        [self.masterViewController viewDidAppear:animated];
-    };
-    
-    if (animated) {
-        [UIView animateWithDuration:0.25f animations:animationBlock completion:completionBlock];
-    } else {
-        animationBlock();
-        completionBlock(YES);
-    }
-    
-    [UIView animateWithDuration:0.25f 
-                     animations:^{
-                         
-                     } completion:nil];
-}
-
-- (void)_morphMasterViewOutAnimated:(BOOL)animated
-{
-    void(^animationBlock)(void) = ^(void) {
-        _masterView.frame = self.hiddenMasterFrame;
-        _detailsOverlayView.alpha = 0.0f;
-    };
-    
-    void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
-        [self _unloadMasterView];
-        _detailsView.userInteractionEnabled = YES;
-        [self.masterViewController viewDidDisappear:animated];
-    };
-    
-    [self.masterViewController viewWillDisappear:animated];
-    
-    if (animated) {
-        [UIView animateWithDuration:0.25f animations:animationBlock completion:completionBlock];
-    } else {
-        animationBlock();
-        completionBlock(YES);
+        [self morphMasterViewControllerOutAnimated:YES];
     }
 }
 
@@ -647,7 +653,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 - (void)_barButtonItemClicked:(UIBarButtonItem *)sender
 {
     if (sender == _barButtonItem) {
-        [self _morphMasterViewInAnimated:YES];
+        [self morphMasterViewControllerInAnimated:YES];
     }
 }
 

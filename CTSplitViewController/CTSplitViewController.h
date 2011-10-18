@@ -78,6 +78,9 @@ typedef NSInteger CTSplitViewControllerVisibleMasterViewOrientations;
 
 @property (nonatomic, assign) CTSplitViewControllerVisibleMasterViewOrientations supportedMasterViewOrientations;
 
+- (void)morphMasterViewControllerInAnimated:(BOOL)animated;
+- (void)morphMasterViewControllerOutAnimated:(BOOL)animated;
+
 @end
 
 

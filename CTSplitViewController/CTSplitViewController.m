@@ -38,6 +38,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 @interface CTSplitViewController () {
     CTSplitViewControllerMasterView *_masterView;
     UIView *_detailsView;
+    UIView *_detailsOverlayView;
     
     struct {
         BOOL masterViewControllerHidden;
@@ -288,6 +289,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     
     _detailsView.userInteractionEnabled = YES;
+    _detailsOverlayView.alpha = 0.0f;
     
     // called after rotation, we also need to layout our master and details view here, because this may be called after loadView
     if ([self _isMasterViewControllerVisibleInInterfaceOrientation:self.interfaceOrientation]) {
@@ -310,6 +312,8 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
     [super willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    
+    _detailsOverlayView.alpha = 0.0f;
     
     if ([self _isMasterViewControllerVisibleInInterfaceOrientation:toInterfaceOrientation]) {
         // master view will be visible
@@ -533,6 +537,12 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     cornerImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     cornerImageView.image = [[UIImage imageNamed:@"CTSplitViewCornerImage.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(3.0f, 3.0f, 3.0f, 3.0f)];
     [_detailsView addSubview:cornerImageView];
+    
+    _detailsOverlayView = [[UIView alloc] initWithFrame:_detailsView.bounds];
+    _detailsOverlayView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.5f];
+    _detailsOverlayView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    _detailsOverlayView.alpha = 0.0f;
+    [_detailsView addSubview:_detailsOverlayView];
 }
 
 - (void)_unloadDetailsView
@@ -583,6 +593,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     
     void(^animationBlock)(void) = ^(void) {
         _masterView.frame = self.visibleMasterFrame;
+        _detailsOverlayView.alpha = 1.0f;
     };
     
     void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
@@ -607,6 +618,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 {
     void(^animationBlock)(void) = ^(void) {
         _masterView.frame = self.hiddenMasterFrame;
+        _detailsOverlayView.alpha = 0.0f;
     };
     
     void(^completionBlock)(BOOL finished) = ^(BOOL finished) {

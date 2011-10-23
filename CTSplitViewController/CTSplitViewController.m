@@ -304,6 +304,10 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
         [self _unloadMasterView];
         _detailsView.frame = self.hiddenMasterDetailsFrame;
     }
+    
+    for (UIViewController *viewController in self.childViewControllers) {
+        [viewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    }
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
@@ -325,6 +329,10 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
         // master view will not be visible
         _masterView.frame = self.hiddenMasterFrame;
         _detailsView.frame = self.hiddenMasterDetailsFrame;
+    }
+    
+    for (UIViewController *viewController in self.childViewControllers) {
+        [viewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
     }
 }
 
@@ -356,6 +364,10 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
         [self _masterViewWillDisappearAndCreateBarButtonItem];
     } else if ([self _isMasterViewControllerVisibleInInterfaceOrientation:toInterfaceOrientation]) {
         [self _masterViewWillAppearAndInvalidateBarButtonItem];
+    }
+    
+    for (UIViewController *viewController in self.childViewControllers) {
+        [viewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     }
 }
 

@@ -43,6 +43,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     struct {
         BOOL masterViewControllerHidden;
         CGFloat masterViewControllerWidth;
+        CTSplitViewControllerMasterViewState currentMasterViewState;
     } _splitViewControllerFlags;
 }
 
@@ -54,6 +55,8 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 - (void)_unloadMasterView;
 @property (nonatomic, readonly) BOOL isMasterViewLoaded;
 @property (nonatomic, readonly) BOOL isMasterViewVisible;
+
+@property (nonatomic, assign) CTSplitViewControllerMasterViewState currentMasterViewState;
 
 @property (nonatomic, readonly) CGRect visibleMasterFrame;
 @property (nonatomic, readonly) CGRect visibleMasterDetailsFrame;
@@ -86,6 +89,18 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 @synthesize delegate=_delegate, viewControllers=_viewControllers, leftSwipeGestureRecognizer=_leftSwipeGestureRecognizer, rightSwipeGestureRecognizer=_rightSwipeGestureRecognizer, tapGestureRecognizer=_tapGestureRecognizer, supportedMasterViewOrientations=_supportedMasterViewOrientations;
 
 #pragma mark - setters and getters
+
+- (CTSplitViewControllerMasterViewState)currentMasterViewState
+{
+    return _splitViewControllerFlags.currentMasterViewState;
+}
+
+- (void)setCurrentMasterViewState:(CTSplitViewControllerMasterViewState)currentMasterViewState
+{
+    if (currentMasterViewState != _splitViewControllerFlags.currentMasterViewState) {
+        _splitViewControllerFlags.currentMasterViewState = currentMasterViewState;
+    }
+}
 
 - (CGRect)hiddenMasterFrame
 {
@@ -300,9 +315,12 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
         _masterView.state = CTSplitViewControllerMasterViewStateVisible;
         _masterView.frame = self.visibleMasterFrame;
         _detailsView.frame = self.visibleMasterDetailsFrame;
+        
+        self.currentMasterViewState = CTSplitViewControllerMasterViewStateVisible;
     } else {
         [self _unloadMasterView];
         _detailsView.frame = self.hiddenMasterDetailsFrame;
+        self.currentMasterViewState = CTSplitViewControllerMasterViewStateHidden;
     }
     
     for (UIViewController *viewController in self.childViewControllers) {
@@ -415,6 +433,9 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
         return;
     }
     
+    self.currentMasterViewState = CTSplitViewControllerMasterViewStateMorphedIn;
+    CTSplitViewControllerMasterViewState masterViewState = self.currentMasterViewState;
+    
     if (!self.isMasterViewLoaded) {
         [self _loadMasterView];
         
@@ -433,8 +454,10 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     };
     
     void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
-        _detailsView.userInteractionEnabled = NO;
-        [self.masterViewController viewDidAppear:animated];
+        if (masterViewState == self.currentMasterViewState) {
+            _detailsView.userInteractionEnabled = NO;
+            [self.masterViewController viewDidAppear:animated];
+        }
     };
     
     if (animated) {
@@ -455,15 +478,21 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     if (_masterView.state != CTSplitViewControllerMasterViewStateMorphedIn) {
         return;
     }
+    
+    self.currentMasterViewState = CTSplitViewControllerMasterViewStateHidden;
+    CTSplitViewControllerMasterViewState masterViewState = self.currentMasterViewState;
+    
     void(^animationBlock)(void) = ^(void) {
         _masterView.frame = self.hiddenMasterFrame;
         _detailsOverlayView.alpha = 0.0f;
     };
     
     void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
-        [self _unloadMasterView];
-        _detailsView.userInteractionEnabled = YES;
-        [self.masterViewController viewDidDisappear:animated];
+        if (masterViewState == self.currentMasterViewState) {
+            [self _unloadMasterView];
+            _detailsView.userInteractionEnabled = YES;
+            [self.masterViewController viewDidDisappear:animated];
+        }
     };
     
     [self.masterViewController viewWillDisappear:animated];
@@ -526,14 +555,19 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
         return;
     }
     
+    self.currentMasterViewState = CTSplitViewControllerMasterViewStateHidden;
+    CTSplitViewControllerMasterViewState masterViewState = self.currentMasterViewState;
+    
     void(^animationBlock)(void) = ^(void) {
         _masterView.frame = self.hiddenMasterFrame;
         _detailsView.frame = self.hiddenMasterDetailsFrame;
     };
     
     void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
-        [self.masterViewController viewDidDisappear:animated];
-        [self _unloadMasterView];
+        if (masterViewState == self.currentMasterViewState) {
+            [self.masterViewController viewDidDisappear:animated];
+            [self _unloadMasterView];
+        }
     };
     
     
@@ -557,6 +591,9 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
         [self.view addSubview:_masterView];
     }
     
+    self.currentMasterViewState = CTSplitViewControllerMasterViewStateVisible;
+    CTSplitViewControllerMasterViewState masterViewState = self.currentMasterViewState;
+    
     void(^animationBlock)(void) = ^(void) {
         _masterView.frame = self.visibleMasterFrame;
         _detailsView.frame = self.visibleMasterDetailsFrame;
@@ -565,8 +602,10 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     void(^completionBlock)(BOOL finished) = ^(BOOL finished) {
         [self.masterViewController viewDidAppear:animated];
         
-        _detailsView.userInteractionEnabled = YES;
-        _masterView.state = CTSplitViewControllerMasterViewStateVisible;
+        if (masterViewState == self.currentMasterViewState) {
+            _detailsView.userInteractionEnabled = YES;
+            _masterView.state = CTSplitViewControllerMasterViewStateVisible;
+        }
     };
     
     

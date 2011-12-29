@@ -644,6 +644,7 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
 - (void)_loadDetailsView
 {
     _detailsView = [[UIView alloc] initWithFrame:self.visibleMasterDetailsFrame];
+    _detailsView.layer.masksToBounds = YES;
     _detailsView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
     [_detailsView insertSubview:self.detailsViewController.view atIndex:0];

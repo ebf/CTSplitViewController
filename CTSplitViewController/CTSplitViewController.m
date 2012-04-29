@@ -237,6 +237,8 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     [super loadView];
     self.view.backgroundColor = [UIColor blackColor];
     
+    self.view.layer.masksToBounds = YES;
+    
     // first load _detailsView because its always visible
     [self.detailsViewController viewWillAppear:NO];
     [self _loadDetailsView];

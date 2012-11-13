@@ -290,6 +290,42 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     _tapGestureRecognizer = nil;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    for (UIViewController *viewController in self.childViewControllers) {
+        [viewController viewWillAppear:animated];
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    for (UIViewController *viewController in self.childViewControllers) {
+        [viewController viewDidAppear:animated];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    for (UIViewController *viewController in self.childViewControllers) {
+        [viewController viewWillDisappear:animated];
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
+    for (UIViewController *viewController in self.childViewControllers) {
+        [viewController viewDidDisappear:animated];
+    }
+}
+
 #pragma mark - rotation support
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

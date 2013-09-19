@@ -245,13 +245,16 @@ static inline CTSplitViewControllerVisibleMasterViewOrientation CTSplitViewContr
     [self.view addSubview:_detailsView];
     [self.detailsViewController viewDidAppear:NO];
     
+    _detailsView.frame = self.view.bounds;
+    
     if ([self _isMasterViewControllerVisibleInInterfaceOrientation:self.interfaceOrientation]) {
         // load master view if allowed
         [self _loadMasterView];
         [self.view addSubview:_masterView];
-    } else {
-        // not allowed to load master view, update details view frame
-        _detailsView.frame = self.view.bounds;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            _detailsView.frame = self.visibleMasterDetailsFrame;
+        });
     }
     
     _rightSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(_rightSwipeGestureRecognized:)];
